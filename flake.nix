@@ -4,13 +4,15 @@
   inputs.nixos-unstable.url = "github:NixOS/nixpkgs/nixos-unstable-small";
   inputs.nixos-2311.url = "github:NixOS/nixpkgs/release-23.11";
 
+  inputs.systems.url = "github:nix-systems/default-linux";
+  inputs.systems.flake = false;
+
   nixConfig.extra-substituters = [ "https://numtide.cachix.org" ];
   nixConfig.extra-trusted-public-keys = [ "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE=" ];
 
-  outputs = { self, nixos-unstable, nixos-2311 }:
+  outputs = { self, nixos-unstable, nixos-2311, systems }:
     let
-      supportedSystems = [ "aarch64-linux" "x86_64-linux" ];
-      forAllSystems = nixos-unstable.lib.genAttrs supportedSystems;
+      forAllSystems = nixos-unstable.lib.genAttrs (import systems);
     in
     {
       packages = forAllSystems (system:
