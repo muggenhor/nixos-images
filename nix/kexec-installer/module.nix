@@ -40,16 +40,16 @@ in
 
     system.build.kexecTarball = pkgs.runCommand "kexec-tarball" { } ''
       mkdir kexec $out
-      cp "${config.system.build.netbootRamdisk}/initrd" kexec/initrd
-      cp "${config.system.build.kernel}/${config.system.boot.loader.kernelFile}" kexec/bzImage
-      cp "${config.system.build.kexecRun}" kexec/run
-      cp "${pkgs.pkgsStatic.kexec-tools}/bin/kexec" kexec/kexec
-      cp "${iprouteStatic}/bin/ip" kexec/ip
+      ln -s "${config.system.build.netbootRamdisk}/initrd" kexec/initrd
+      ln -s "${config.system.build.kernel}/${config.system.boot.loader.kernelFile}" kexec/bzImage
+      ln -s "${config.system.build.kexecRun}" kexec/run
+      ln -s "${pkgs.pkgsStatic.kexec-tools}/bin/kexec" kexec/kexec
+      ln -s "${iprouteStatic}/bin/ip" kexec/ip
       ${lib.optionalString (pkgs.hostPlatform == pkgs.buildPlatform) ''
         kexec/ip -V
         kexec/kexec --version
       ''}
-      tar --sort=name --mtime='@1' --owner=0 --group=0 --numeric-owner -czf $out/${config.system.kexec-installer.name}-${pkgs.stdenv.hostPlatform.system}.tar.gz kexec
+      tar --sort=name --mtime='@1' --owner=0 --group=0 --numeric-owner --dereference -czf $out/${config.system.kexec-installer.name}-${pkgs.stdenv.hostPlatform.system}.tar.gz kexec
     '';
 
     # for detection if we are on kexec
