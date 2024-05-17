@@ -38,8 +38,8 @@ in
       ${pkgs.shellcheck}/bin/shellcheck $out
     '';
 
-    system.build.kexecTarball = pkgs.runCommand "kexec-tarball" { } ''
-      mkdir kexec $out
+    system.build.kexecTarball = pkgs.runCommand "${config.system.kexec-installer.name}-${pkgs.stdenv.hostPlatform.system}.tar.gz" { } ''
+      mkdir kexec
       ln -s "${config.system.build.netbootRamdisk}/initrd" kexec/initrd
       ln -s "${config.system.build.kernel}/${config.system.boot.loader.kernelFile}" kexec/bzImage
       ln -s "${config.system.build.kexecRun}" kexec/run
@@ -49,7 +49,7 @@ in
         kexec/ip -V
         kexec/kexec --version
       ''}
-      tar --sort=name --mtime='@1' --owner=0 --group=0 --numeric-owner --dereference -czf $out/${config.system.kexec-installer.name}-${pkgs.stdenv.hostPlatform.system}.tar.gz kexec
+      tar --sort=name --mtime='@1' --owner=0 --group=0 --numeric-owner --dereference -czf "$out" kexec
     '';
 
     # for detection if we are on kexec

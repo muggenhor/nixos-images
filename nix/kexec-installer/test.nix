@@ -130,7 +130,7 @@ makeTest' {
     node1.succeed('touch /run/foo')
     old_machine_id = node1.succeed("cat /etc/machine-id").strip()
     node1.fail('parted --version >&2')
-    node1.succeed('tar -xf ${kexecTarball}/nixos-kexec-installer-noninteractive-${pkgs.system}.tar.gz -C /root')
+    node1.succeed('tar -xf ${kexecTarball} -C /root')
     node1.succeed('/root/kexec/ip -V >&2')
     node1.succeed('/root/kexec/kexec --version >&2')
     node1.succeed('/root/kexec/run >&2')
