@@ -49,7 +49,7 @@ in
         kexec/ip -V
         kexec/kexec --version
       ''}
-      tar -czvf $out/${config.system.kexec-installer.name}-${pkgs.stdenv.hostPlatform.system}.tar.gz kexec
+      tar --sort=name --mtime='@1' --owner=0 --group=0 --numeric-owner -czf $out/${config.system.kexec-installer.name}-${pkgs.stdenv.hostPlatform.system}.tar.gz kexec
     '';
 
     # for detection if we are on kexec
